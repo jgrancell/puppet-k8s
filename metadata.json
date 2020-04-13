@@ -1,0 +1,51 @@
+{
+  "name": "puppet-k8s",
+  "version": "1.0.0",
+  "author": "Josh Grancell",
+  "summary": "Automation-focused Puppet module for Kubernetes",
+  "data_provider": "hiera",
+  "license": "Apache-2.0",
+  "source": "https://github.com/jgrancell/puppet-k8s",
+  "project_page": "https://github.com/jgrancell/puppet-k8s",
+  "issues_url": "https://github.com/jgrancell/puppet-k8s",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 4.20.0 < 7.0.0"
+    },
+    {
+      "name": "puppet-selinux",
+      "version_requirement": ">= 2.0.0 < 3.0.0"
+    },
+    {
+      "name": "camptocamp-kmod",
+      "version_requirement": ">= 2.0.0 < 3.0.0"
+    },
+    {
+      "name": "herculesteam-augeasproviders_sysctl",
+      "version_requirement": ">= 2.5.0 < 3.0.0"
+    },
+    {
+      "name": "puppet-healthcheck",
+      "version_requirement": ">= 1.0.0 < 2.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.10.0 < 7.0.0"
+    }
+  ],
+  "pdk-version": "1.17.0",
+  "template-url": "https://github.com/puppetlabs/pdk-templates#1.17.0",
+  "template-ref": "tags/1.17.0-0-gd3a4319"
+}

@@ -1,0 +1,11 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Execute `kubeadm join` on a new cluster node.",
+  "parameters": {
+    "join_command" : {
+      "description": "The `kubeadm join` command to execute.",
+      "type": "String[1]"
+    }
+  }
+}

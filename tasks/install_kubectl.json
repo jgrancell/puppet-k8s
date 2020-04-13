@@ -1,0 +1,11 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Install/upgrade kubectl to a specified version.",
+  "parameters": {
+    "version" : {
+      "description": "The Kubernetes version to upgrade kubectl to.",
+      "type": "Pattern[/v\\d+\\.\\d+\\.\\d+/]"
+    }
+  }
+}

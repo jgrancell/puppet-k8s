@@ -1,0 +1,16 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Create a join command for a Kubernetes node.",
+  "parameters": {
+    "control_plane" : {
+      "description": "Whether to create a worker node join command or a control plane join command.",
+      "type": "Boolean",
+      "default": false
+    },
+    "certificate_key" : {
+      "description": "The certificate key to use for a control plane join command.",
+      "type": "Optional[String]"
+    }
+  }
+}

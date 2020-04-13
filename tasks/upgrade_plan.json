@@ -1,0 +1,7 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Plan a Kubernetes upgrade with kubeadm on a cluster node.",
+  "parameters": {
+  }
+}

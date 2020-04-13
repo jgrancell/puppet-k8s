@@ -1,0 +1,16 @@
+---
+.vscode/extensions.json:
+  delete: true
+.gitlab-ci.yml:
+  delete: true
+.travis.yml:
+  delete: true
+appveyor.yml:
+  delete: true
+Gemfile:
+  use_litmus: true
+spec/spec_helper.rb:
+  coverage_report: true
+  hiera_config: hiera.yaml
+  minimum_code_coverage_percentage: 100
+  mock_with: ':rspec'

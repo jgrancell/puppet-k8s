@@ -1,0 +1,73 @@
+---
+k8s::server::additional_packages:
+  - jq
+  - kubernetes-cni
+
+k8s::server::cluster_config:
+  apiVersion: kubeadm.k8s.io/v1beta2
+  kind: ClusterConfiguration
+  controlPlaneEndpoint: "%{trusted.certname}:6443"
+  imageRepository: "k8s.gcr.io"
+  kubernetesVersion: "v1.15.2"
+  certificatesDir: "/etc/kubernetes/pki"
+  clusterName: "kubernetes"
+  etcd:
+    local:
+      imageRepository: "k8s.gcr.io"
+      imageTag: "3.3.10"
+      dataDir: "/var/lib/etcd"
+  networking:
+    serviceSubnet: "10.96.0.0/12"
+    podSubnet: "10.229.0.0/16"
+    dnsDomain: "cluster.local"
+  apiServer:
+    extraArgs:
+      authorization-mode: "Node,RBAC"
+      endpoint-reconciler-type: "lease"
+
+k8s::server::cluster_init_master: false
+k8s::server::cluster_join_wait: 600
+
+k8s::server::cni_plugin: calico
+k8s::server::cni_plugin_config:
+  ipv4pool_cidr: "10.229.0.0/16"
+  ipv4pool_ipip: "Off"
+  version: "3.13.1"
+
+
+k8s::server::init_config:
+  apiVersion: kubeadm.k8s.io/v1beta2
+  kind: InitConfiguration
+  bootstrapTokens:
+  - token: "9a08jv.c0izixklcxtmnze7"
+    description: "kubeadm bootstrap token"
+    ttl: "24h"
+  nodeRegistration:
+    kubeletExtraArgs:
+      cgroup-driver: "systemd"
+      cni-bin-dir: "/opt/cni/bin"
+      cni-conf-dir: "/etc/cni/net.d"
+      network-plugin: "cni"
+      feature-gates: "PodPriority=true"
+  certificateKey: "e6a2eb8581237ab72a4f494f30285ec12a9694d750b9785706a83bfcbbbd2204"
+
+k8s::server::join_config:
+  apiVersion: kubeadm.k8s.io/v1beta2
+  kind: JoinConfiguration
+  caCertPath: "/etc/kubernetes/pki/ca.crt"
+  discovery:
+    bootstrapToken:
+      token: "9a08jv.c0izixklcxtmnze7"
+      apiServerEndpoint: "%{trusted.certname}:6443"
+      caCertHashes:
+        - "sha256:a09036f52ed22fd61448a5c69cf3f16343d8b0fb1c44cf67b104ce45a7cc07d9"
+      unsafeSkipCAVerification: false
+  controlPlane:
+    certificateKey: "e6a2eb8581237ab72a4f494f30285ec12a9694d750b9785706a83bfcbbbd2204"
+
+k8s::server::manage_selinux: true
+k8s::server::manage_repositories: true
+k8s::server::manage_sysctl_ipv4_forward: true
+k8s::server::repository_url: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+k8s::server::role: worker
+k8s::server::use_proxy: false

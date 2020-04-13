@@ -1,0 +1,11 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Execute `kubectl uncordon` on a cluster node.",
+  "parameters": {
+    "node" : {
+      "description": "The Kubernetes node to uncordon after maintenance.",
+      "type": "Optional[String[1]]"
+    }
+  }
+}

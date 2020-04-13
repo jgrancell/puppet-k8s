@@ -1,0 +1,11 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Re-upload Kubernetes certificates to the cluster in preparation for joining new control plane nodes.",
+  "parameters": {
+    "certificate_key" : {
+      "description": "An optional certificate key to use for encrypting certificates uploaded to the cluster.",
+      "type": "Optional[String]"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "description": "Apply an initial Kubernetes upgrade with kubeadm on a control plane node.",
+  "parameters": {
+    "version" : {
+      "description": "The Kubernetes version to upgrade the cluster node to.",
+      "type": "Pattern[/v\\d+\\.\\d+\\.\\d+/]"
+    }
+  }
+}

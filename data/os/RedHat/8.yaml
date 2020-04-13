@@ -1,0 +1,5 @@
+---
+k8s::server::additional_packages:
+  - jq
+  - kubernetes-cni
+  - iproute-tc
