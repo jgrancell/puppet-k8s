@@ -12,6 +12,7 @@ class k8s::shared (
   Boolean           $manage_selinux,
   Boolean           $manage_repositories,
   Boolean           $manage_sysctl_ipv4_forward,
+  Boolean           $manage_sysctl_ip_nonlocal_bind,
   String            $repository_url,
   Boolean           $use_proxy,
   String            $version,
@@ -21,8 +22,9 @@ class k8s::shared (
   ) {
 
   class { 'k8s::shared::preflight':
-    manage_selinux             => $manage_selinux,
-    manage_sysctl_ipv4_forward => $manage_sysctl_ipv4_forward,
+    manage_selinux                 => $manage_selinux,
+    manage_sysctl_ipv4_forward     => $manage_sysctl_ipv4_forward,
+    manage_sysctl_ip_nonlocal_bind => $manage_sysctl_ip_nonlocal_bind,
   }
   contain 'k8s::shared::preflight'
 

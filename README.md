@@ -1,6 +1,9 @@
 # Kubernetes Module
 
-This module is responsible for installing and configuring Kubernetes masters and workers.
+This module is responsible for installing and configuring Kubernetes masters and workers in an automation-focused fashion.
+
+It is expected that when using this module you are using GitOps tools (such as Argo) for cluster configuration, as well
+as IaC tools (such as Terraform) to generate certificates and provision servers.
 
 #### Table of Contents
 

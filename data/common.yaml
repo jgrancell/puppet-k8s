@@ -68,6 +68,7 @@ k8s::server::join_config:
 k8s::server::manage_selinux: true
 k8s::server::manage_repositories: true
 k8s::server::manage_sysctl_ipv4_forward: true
+k8s::server::manage_sysctl_ip_nonlocal_bind: true
 k8s::server::repository_url: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
 k8s::server::role: worker
 k8s::server::use_proxy: false

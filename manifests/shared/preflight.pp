@@ -7,6 +7,7 @@
 class k8s::shared::preflight (
   Boolean $manage_selinux,
   Boolean $manage_sysctl_ipv4_forward,
+  Boolean $manage_sysctl_ip_nonlocal_bind,
   ) {
 
   ## Ensuring hostname is set up properly
@@ -44,12 +45,14 @@ class k8s::shared::preflight (
     }
   }
 
-  sysctl { 'net.ipv4.ip_nonlocal_bind':
-    ensure  => present,
-    value   => '1',
-    persist => true,
-    silent  => true,
-    require => [ Kmod::Load['bridge'], Kmod::Load['br_netfilter'], ],
+  if $manage_sysctl_ip_nonlocal_bind {
+    sysctl { 'net.ipv4.ip_nonlocal_bind':
+      ensure  => present,
+      value   => '1',
+      persist => true,
+      silent  => true,
+      require => [ Kmod::Load['bridge'], Kmod::Load['br_netfilter'], ],
+    }
   }
 
   sysctl { 'net.bridge.bridge-nf-call-iptables':

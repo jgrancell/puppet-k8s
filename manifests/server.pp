@@ -16,6 +16,7 @@ class k8s::server (
   Boolean                  $manage_selinux,
   Boolean                  $manage_repositories,
   Boolean                  $manage_sysctl_ipv4_forward,
+  Boolean                  $manage_sysctl_ip_nonlocal_bind,
   String                   $repository_url,
   Enum['master', 'worker'] $role,
   Boolean                  $use_proxy,
@@ -40,16 +41,17 @@ class k8s::server (
 
   ## Provides the common packages/repos/configuration for workers and masters
   class { 'k8s::shared':
-    additional_packages        => $additional_packages,
-    internet_proxy             => $internet_proxy,
-    internet_proxy_port        => $internet_proxy_port,
-    manage_selinux             => $manage_selinux,
-    manage_repositories        => $manage_repositories,
-    manage_sysctl_ipv4_forward => $manage_sysctl_ipv4_forward,
-    repository_url             => $repository_url,
-    repository_gpg_key         => $repository_gpg_key,
-    use_proxy                  => $use_proxy,
-    version                    => $_version,
+    additional_packages            => $additional_packages,
+    internet_proxy                 => $internet_proxy,
+    internet_proxy_port            => $internet_proxy_port,
+    manage_selinux                 => $manage_selinux,
+    manage_repositories            => $manage_repositories,
+    manage_sysctl_ipv4_forward     => $manage_sysctl_ipv4_forward,
+    manage_sysctl_ip_nonlocal_bind => $manage_sysctl_ip_nonlocal_bind,
+    repository_url                 => $repository_url,
+    repository_gpg_key             => $repository_gpg_key,
+    use_proxy                      => $use_proxy,
+    version                        => $_version,
   }
   contain 'k8s::shared'
 
