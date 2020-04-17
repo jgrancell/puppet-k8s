@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'k8s::master::config' do
+describe 'k8s::master::initialize' do
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }

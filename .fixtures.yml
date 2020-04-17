@@ -1,9 +1,13 @@
 ---
 fixtures:
   forge_modules:
+    # Core Dependencies
+    archive: "puppet/archive"
+    healthcheck: "puppet/healthcheck"
     kmod: "camptocamp/kmod"
     selinux: "puppet/selinux"
     stdlib: "puppetlabs/stdlib"
+    # Fixture-specific Dependencies
     yumrepo_core: "puppetlabs/yumrepo_core"
     mount_core: "puppetlabs/mount_core"
     augeasproviders_core: "herculesteam/augeasproviders_core"

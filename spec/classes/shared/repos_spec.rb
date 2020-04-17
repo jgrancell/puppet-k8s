@@ -11,7 +11,7 @@ describe 'k8s::shared::repos' do
         let(:params) do
           {
             repository_url: 'https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64',
-            use_proxy: false,
+            use_proxy:      false,
           }
         end
 
@@ -32,8 +32,8 @@ describe 'k8s::shared::repos' do
         let(:params) do
           {
             internet_proxy:      'foo.com',
-            internet_proxy_port: '8080',
-            repository_url: 'https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64',
+            internet_proxy_port: 8080,
+            repository_url:      'https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64',
             use_proxy:           true,
           }
         end

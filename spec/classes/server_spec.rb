@@ -72,19 +72,33 @@ describe 'k8s::server' do
     },
   }
 
+  cni_config = {
+    'ipv4pool_cidr' => '10.229.0.0/16',
+    'ipv4pool_ipip' => 'Off',
+    'version'       => '3.13.1',
+  }
+
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
 
       let(:params) do
         {
-          additional_packages: ['jq', 'kubernetes-cni'],
-          cluster_config:      cluster_config,
-          init_config:         init_config,
-          join_config:         join_config,
-          manage_repositories: true,
-          repository_url:      'https://foo.bar.com',
-          use_proxy:           false,
+          additional_packages:            ['jq', 'kubernetes-cni'],
+          cluster_config:                 cluster_config,
+          cluster_init_master:            true,
+          cluster_join_wait:              60,
+          cni_plugin:                     'calico',
+          cni_plugin_config:              cni_config,
+          init_config:                    init_config,
+          join_config:                    join_config,
+          manage_selinux:                 true,
+          manage_repositories:            true,
+          manage_sysctl_ipv4_forward:     true,
+          manage_sysctl_ip_nonlocal_bind: true,
+          repository_url:                 'https://foo.bar.com',
+          role:                           'master',
+          use_proxy:                      false,
         }
       end
 
@@ -95,11 +109,32 @@ describe 'k8s::server' do
           .with_additional_packages(['jq', 'kubernetes-cni'])
           .with_internet_proxy(nil)
           .with_internet_proxy_port(nil)
+          .with_manage_selinux(true)
           .with_manage_repositories(true)
+          .with_manage_sysctl_ipv4_forward(true)
+          .with_manage_sysctl_ip_nonlocal_bind(true)
           .with_repository_url('https://foo.bar.com')
           .with_repository_gpg_key(nil)
           .with_use_proxy(false)
-          .with_version('1.15.2')
+          .with_version('v1.15.2')
+      }
+
+      it {
+        is_expected.to contain_class('k8s::master::install')
+          .with_apiserver('%{trusted.certname}:6443')
+          .with_cluster_config(cluster_config)
+          .with_cluster_init_master(true)
+          .with_cluster_join_wait(60)
+          .with_cni_plugin('calico')
+          .with_cni_plugin_config(cni_config)
+          .with_init_config(init_config)
+          .with_internet_proxy(nil)
+          .with_internet_proxy_port(nil)
+          .with_join_config(join_config)
+          .with_kubelet_config(nil)
+          .with_kubeproxy_config(nil)
+          .with_use_proxy(false)
+          .with_require('Class[K8s::Shared]')
       }
 
       it { is_expected.to contain_class('k8s::master::install') }

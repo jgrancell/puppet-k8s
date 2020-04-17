@@ -72,15 +72,27 @@ describe 'k8s::master::install' do
     },
   }
 
+  cni_config = {
+    'ipv4pool_cidr' => '10.229.0.0/16',
+    'ipv4pool_ipip' => 'Off',
+    'version'       => '3.13.1',
+  }
+
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
 
       let(:params) do
         {
+          apiserver:           'https://example.com:6443',
           cluster_config:      cluster_config,
+          cluster_init_master: true,
+          cluster_join_wait:   60,
+          cni_plugin:          'calico',
+          cni_plugin_config:   cni_config,
           init_config:         init_config,
           join_config:         join_config,
+          use_proxy:           false,
         }
       end
 
