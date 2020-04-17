@@ -7,7 +7,7 @@ require 'puppet'
 
 def create_join_command(control_plane, certificate_key)
   if control_plane && (certificate_key.nil? || certificate_key.empty?)
-    raise Puppet::Error, "control plane join command requested but no certificate_key was supplied"
+    raise Puppet::Error, 'control plane join command requested but no certificate_key was supplied'
   end
   cmd = ['kubeadm', 'token', 'create', '--print-join-command']
   stdout, stderr, status = Open3.capture3(*cmd)

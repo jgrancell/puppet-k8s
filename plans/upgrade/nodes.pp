@@ -13,7 +13,7 @@ plan k8s::upgrade::nodes (
     run_task('k8s::upgrade_node', $node, "Running node upgrade to ${version}")
     run_task('k8s::install_kubectl', $node, "Installing kubectl ${version}", 'version' => $version)
     run_task('k8s::install_kubelet', $node, "Installing kubelet ${version}", 'version' => $version)
-    run_task('k8s::restart_kubelet', $node, "Restarting the kubelet service")
+    run_task('k8s::restart_kubelet', $node, 'Restarting the kubelet service')
     run_task('k8s::uncordon_node', $kubectl_host, "Executing uncordon of ${node}", 'node' => $node)
   }
 }

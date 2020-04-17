@@ -94,7 +94,6 @@ class k8s::shared::networking::calico (
       use_ssl       => true,
       verify_peer   => false,
       try_sleep     => 60,
-      timeout       => $cluster_join_wait,
       expected_code => 403,
       before        => Exec['install_calico'],
     }

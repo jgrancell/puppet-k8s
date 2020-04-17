@@ -7,18 +7,18 @@ plan k8s::add_nodes (
   Boolean $control_plane = false,
 ) {
   if $control_plane {
-    $certs_res = run_task('k8s::upload_certs', $kubectl_host, "Uploading certs to cluster").first
+    $certs_res = run_task('k8s::upload_certs', $kubectl_host, 'Uploading certs to cluster').first
     $key = $certs_res['certificate_key']
     $cp  = true
   } else {
     $key = undef
     $cp  = false
   }
-  $cmd_res = run_task('k8s::create_join_command', $kubectl_host, "Creating node join command",
+  $cmd_res = run_task('k8s::create_join_command', $kubectl_host, 'Creating node join command',
                       'control_plane' => $cp, 'certificate_key' => $key).first
   $join_command = $cmd_res['join_command']
   $nodes = get_targets($targets).map |$n| { $n.name }
   $nodes.each |$node| {
-    run_task('k8s::join_node', $node, "Running join command", 'join_command' => $join_command)
+    run_task('k8s::join_node', $node, 'Running join command', 'join_command' => $join_command)
   }
 }
