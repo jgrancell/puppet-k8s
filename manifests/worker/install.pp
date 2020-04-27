@@ -5,8 +5,9 @@
 # @example
 #   include k8s::worker::install
 class k8s::worker::install (
-  String $apiserver,
-  Hash   $join_config,
+  String  $apiserver,
+  Boolean $run_kubeadm,
+  Hash    $join_config,
   ) {
 
   File {
@@ -38,13 +39,13 @@ class k8s::worker::install (
     refreshonly => true,
   }
 
-  exec { 'kubeadm-join':
-    command   => "kubeadm join --config /etc/kubernetes/kubeadm/worker.yaml ${apiserver}",
-    logoutput => true,
-    path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-    unless    => 'test -f /etc/kubernetes/admin.conf',
-    require   => Exec['generate-worker-yaml'],
+  if $run_kubeadm {
+    exec { 'kubeadm-join':
+      command   => "kubeadm join --config /etc/kubernetes/kubeadm/worker.yaml ${apiserver}",
+      logoutput => true,
+      path      => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+      unless    => 'test -f /etc/kubernetes/admin.conf',
+      require   => Exec['generate-worker-yaml'],
+    }
   }
-
-  # TODO: Add upgrade functionality
 }

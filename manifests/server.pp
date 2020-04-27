@@ -19,6 +19,7 @@ class k8s::server (
   Boolean                  $manage_sysctl_ip_nonlocal_bind,
   String                   $repository_url,
   Enum['master', 'worker'] $role,
+  Boolean                  $run_kubeadm,
   Boolean                  $use_proxy,
   Optional[String]         $internet_proxy      = undef,
   Optional[Integer]        $internet_proxy_port = undef,
@@ -70,6 +71,7 @@ class k8s::server (
       join_config         => $join_config,
       kubelet_config      => $kubelet_config,
       kubeproxy_config    => $kubeproxy_config,
+      run_kubeadm         => $run_kubeadm,
       use_proxy           => $use_proxy,
       require             => Class['k8s::shared'],
     }
@@ -78,6 +80,7 @@ class k8s::server (
     class { 'k8s::worker::install':
       apiserver   => $_apiserver,
       join_config => $join_config,
+      run_kubeadm => $run_kubeadm,
       require     => Class['k8s::shared'],
     }
     contain 'k8s::worker::install'

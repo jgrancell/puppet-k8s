@@ -13,6 +13,7 @@ class k8s::master::install (
   Hash              $cni_plugin_config,
   Hash              $init_config,
   Hash              $join_config,
+  Boolean           $run_kubeadm,
   Boolean           $use_proxy,
   Optional[String]  $internet_proxy      = undef,
   Optional[Integer] $internet_proxy_port = undef,
@@ -72,49 +73,49 @@ class k8s::master::install (
     refreshonly => true,
   }
 
-  if ! $cluster_init_master {
-    # Checking for connectivity to the cluster init master prior to joining
-    http_conn_validator { "https://${apiserver}":
-      use_ssl       => true,
-      verify_peer   => false,
-      try_sleep     => 60,
-      timeout       => $cluster_join_wait,
-      expected_code => 403,
+  if $run_kubeadm {
+    if ! $cluster_init_master {
+      # Checking for connectivity to the cluster init master prior to joining
+      http_conn_validator { "https://${apiserver}":
+        use_ssl       => true,
+        verify_peer   => false,
+        try_sleep     => 60,
+        timeout       => $cluster_join_wait,
+        expected_code => 403,
+      }
+
+      class { 'k8s::master::join':
+        apiserver => $apiserver,
+        before    => Class['k8s::shared::networking'],
+        require   => [Exec['generate-master-yaml'], Http_conn_validator["https://${apiserver}"]],
+      }
+    } else {
+      class { 'k8s::master::initialize':
+        before  => Class['k8s::shared::networking'],
+        require => Exec['generate-master-yaml'],
+      }
     }
 
-    class { 'k8s::master::join':
-      apiserver => $apiserver,
-      before    => Class['k8s::shared::networking'],
-      require   => [Exec['generate-master-yaml'], Http_conn_validator["https://${apiserver}"]],
+    # Add calico functionality
+    class { 'k8s::shared::networking':
+      apiserver           => $apiserver,
+      cluster_init_master => $cluster_init_master,
+      cni_plugin          => $cni_plugin,
+      cni_plugin_config   => $cni_plugin_config,
+      use_proxy           => $use_proxy,
+      internet_proxy      => $internet_proxy,
+      internet_proxy_port => $internet_proxy_port,
     }
-  } else {
-    class { 'k8s::master::initialize':
-      before  => Class['k8s::shared::networking'],
-      require => Exec['generate-master-yaml'],
+
+    file { '/root/.kube':
+      ensure  => directory,
+      mode    => '0700',
+      require => Class['k8s::shared::networking'],
+    }
+
+    file { '/root/.kube/config':
+      ensure => link,
+      target => '/etc/kubernetes/admin.conf',
     }
   }
-
-  # Add calico functionality
-  class { 'k8s::shared::networking':
-    apiserver           => $apiserver,
-    cluster_init_master => $cluster_init_master,
-    cni_plugin          => $cni_plugin,
-    cni_plugin_config   => $cni_plugin_config,
-    use_proxy           => $use_proxy,
-    internet_proxy      => $internet_proxy,
-    internet_proxy_port => $internet_proxy_port,
-  }
-
-  file { '/root/.kube':
-    ensure  => directory,
-    mode    => '0700',
-    require => Class['k8s::shared::networking'],
-  }
-
-  file { '/root/.kube/config':
-    ensure => link,
-    target => '/etc/kubernetes/admin.conf',
-  }
-
-  # TODO: Add upgrade functionality
 }
