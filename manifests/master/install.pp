@@ -95,27 +95,27 @@ class k8s::master::install (
         require => Exec['generate-master-yaml'],
       }
     }
+  }
 
-    # Add calico functionality
-    class { 'k8s::shared::networking':
-      apiserver           => $apiserver,
-      cluster_init_master => $cluster_init_master,
-      cni_plugin          => $cni_plugin,
-      cni_plugin_config   => $cni_plugin_config,
-      use_proxy           => $use_proxy,
-      internet_proxy      => $internet_proxy,
-      internet_proxy_port => $internet_proxy_port,
-    }
+  # Add calico functionality
+  class { 'k8s::shared::networking':
+    apiserver           => $apiserver,
+    cluster_init_master => $cluster_init_master,
+    cni_plugin          => $cni_plugin,
+    cni_plugin_config   => $cni_plugin_config,
+    use_proxy           => $use_proxy,
+    internet_proxy      => $internet_proxy,
+    internet_proxy_port => $internet_proxy_port,
+  }
 
-    file { '/root/.kube':
-      ensure  => directory,
-      mode    => '0700',
-      require => Class['k8s::shared::networking'],
-    }
+  file { '/root/.kube':
+    ensure  => directory,
+    mode    => '0700',
+    require => Class['k8s::shared::networking'],
+  }
 
-    file { '/root/.kube/config':
-      ensure => link,
-      target => '/etc/kubernetes/admin.conf',
-    }
+  file { '/root/.kube/config':
+    ensure => link,
+    target => '/etc/kubernetes/admin.conf',
   }
 }
